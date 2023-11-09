@@ -1,10 +1,12 @@
 #include "rbtree.h"
 #include <stdio.h>
 #include <stdlib.h>
+
 rbtree *new_rbtree(void) {
     rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
     node_t *NIL = (node_t *)calloc(1, sizeof(node_t));
     NIL -> color = RBTREE_BLACK;
+	// 굳이 NULL과 0으로 채울필요없이, 이미 되어있음.
     // NIL -> left = NULL;
     // NIL -> right = NULL;
     // NIL -> key = 0;
@@ -12,6 +14,7 @@ rbtree *new_rbtree(void) {
     p -> root = NIL;
     return p;
 }
+
 void delete_node(rbtree *t, node_t *n) {
     if (n == t -> nil)
         return ;
@@ -19,16 +22,19 @@ void delete_node(rbtree *t, node_t *n) {
     delete_node(t, n -> left);
     free(n);
 }
+
 void delete_rbtree(rbtree *t) {
   delete_node(t, t -> root);
   free(t -> nil);
   free(t);
 }
+
 /*
-delete_rbtree에 들어있는 변수가 *right_node인데,
-right_node 타입이 node_t라서 안된다.
-delete_node를 만들어서 재귀돌려주자!
+delete_rbtree에 들어있는 변수가 rbtree* 타입이라 노드 하나씩 못끊어줌.
+t -> root로 타고 내려온 다음에,
+node_t* 타입을 변수로 갖는 delete_node를 만들어서 왼쪽, 오른쪽 각각 재귀를 돌려주자!
 */
+
 void left_rotate(rbtree *t, node_t *cur_node){
     node_t *right_node = (node_t *)calloc(1, sizeof(node_t));
     if (right_node == t -> nil) {
@@ -50,6 +56,7 @@ void left_rotate(rbtree *t, node_t *cur_node){
     right_node -> left = cur_node;
     cur_node -> parent = right_node;
 }
+
 void right_rotate(rbtree *t, node_t *cur_node){
     node_t *left_node = (node_t *)calloc(1, sizeof(node_t));
     if (left_node == t -> nil) {
@@ -134,6 +141,7 @@ rbtree* rb_insert_fixup(rbtree *t, node_t * cur_node, const key_t key) {
     t -> root -> color = RBTREE_BLACK;
     return t;
 }
+
 node_t *rbtree_insert(rbtree *t, const key_t key) {
     // TODO: implement insert
     node_t * new_node = (node_t *)calloc(1, sizeof(node_t));
@@ -171,6 +179,7 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
   }
   return NULL;
 }
+
 node_t *rbtree_min(const rbtree *t) {
   // TODO: implement
   node_t* p = t -> root;
@@ -179,6 +188,7 @@ node_t *rbtree_min(const rbtree *t) {
   }
   return p;
 }
+
 node_t *rbtree_max(const rbtree *t) {
     node_t* p = t -> root;
     while(p -> right != t -> nil) {
@@ -186,6 +196,7 @@ node_t *rbtree_max(const rbtree *t) {
         }
     return p;
 }
+
 // nil parent없음!
 void rb_transplant(rbtree* t, node_t* u, node_t* v) {
     if(u -> parent == t -> nil)
@@ -195,11 +206,13 @@ void rb_transplant(rbtree* t, node_t* u, node_t* v) {
     else u -> parent -> left = v;
     v -> parent = u -> parent;
 }
+
 node_t* tree_minimum(rbtree* t, node_t* p) {
     while(p != t -> nil)
         p = p -> left;
     return p;
 }
+
 rbtree* rb_delete_fixup(rbtree *t, node_t * x) {
     node_t* w;
     while(x != t -> root && x -> color == RBTREE_BLACK) {
@@ -254,6 +267,7 @@ rbtree* rb_delete_fixup(rbtree *t, node_t * x) {
     x -> color = RBTREE_BLACK;
     return t;
 }
+
 int rbtree_erase(rbtree *t, node_t *p) {
   // TODO: implement erase
   node_t* y = p;
@@ -286,7 +300,18 @@ int rbtree_erase(rbtree *t, node_t *p) {
   free(p);
   return 0;
 }
+
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
-  // TODO: implement to_array
+	node_to_array(r, *arr, t -> root, 0);
   return 0;
 }
+
+int node_to_array(rbtree* t, key_t *arr, node_t* pointer, int a) {
+	if(pointer == t -> nil)
+		return key;
+	node_to_array(t, pointer -> left, key) // 왼쪽
+	arr[i++] = pointer -> key	// 출력
+	node_to_array(t, pointer -> right, key) // 오른쪽
+	return i;
+}
+
