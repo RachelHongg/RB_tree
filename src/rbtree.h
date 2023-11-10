@@ -27,6 +27,9 @@ node_t *rbtree_min(const rbtree *);
 node_t *rbtree_max(const rbtree *);
 int rbtree_erase(rbtree *, node_t *);
 
-int rbtree_to_array(const rbtree *, key_t *, const size_t);
+int rbtree_to_array(rbtree *, key_t *, const size_t);
+void left_rotate(rbtree *t, node_t *cur_node);  // 내가 추가한 부분
+void right_rotate(rbtree *t, node_t *cur_node); // 내가 추가한 부분
+node_t* tree_minimun(rbtree* t, node_t* p); // 내가 추가한 부분
 
 #endif  // _RBTREE_H_
